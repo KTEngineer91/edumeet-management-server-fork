@@ -12,6 +12,7 @@ import { authentication } from './authentication';
 import { services } from './services/index';
 import { channels } from './channels';
 import { authCallback } from './authCallback';
+import { topicGroupRoutes } from './routes/topicGroup';
 // import { setDebug } from '@feathersjs/commons';
 
 // eslint-disable-next-line no-console
@@ -37,6 +38,7 @@ app.configure(channels);
 app.configure(postgresql);
 app.configure(authentication);
 app.configure(services);
+app.configure(topicGroupRoutes);
 
 // Register hooks that run on all service methods
 app.hooks({ around: { all: [ logError ] } });
