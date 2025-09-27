@@ -13,7 +13,6 @@ import { permission } from './permissions/permissions';
 import { groupUser } from './groupUsers/groupUsers';
 import { group } from './groups/groups';
 import { user } from './users/users';
-import { breezeShotValidation } from './breezeShotValidation/breezeShotValidation';
 // For more information about this file see https://dove.feathersjs.com/guides/cli/application.html#configure-functions
 import type { Application } from '../declarations';
 
@@ -33,6 +32,5 @@ export const services = (app: Application) => {
 	app.configure(groupUser);
 	app.configure(group);
 	app.configure(user);
-	app.configure(breezeShotValidation);
 	// All services will be registered here
 };
