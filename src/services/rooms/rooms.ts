@@ -19,7 +19,6 @@ import { RoomService, getOptions } from './rooms.class';
 import { roomPath, roomMethods } from './rooms.shared';
 import { isRoomOwnerOrAdmin } from '../../hooks/isRoomOwnerOrAdmin';
 import { addRoomOwner } from '../../hooks/addRoomOwner';
-import { validateBreezeShotTokenOptional } from '../../hooks/validateBreezeShotToken';
 import { iff } from 'feathers-hooks-common';
 import { notSuperAdmin } from '../../hooks/notSuperAdmin';
 import type { HookContext, NextFunction } from '../../declarations';
@@ -60,8 +59,8 @@ export const room = (app: Application) => {
 				schemaHooks.validateQuery(roomQueryValidator),
 				iff(notSuperAdmin(), schemaHooks.resolveQuery(roomQueryResolver))
 			],
-			find: [ validateBreezeShotTokenOptional ],
-			get: [ validateBreezeShotTokenOptional ],
+			find: [],
+			get: [],
 			create: [
 				schemaHooks.validateData(roomDataValidator),
 				schemaHooks.resolveData(roomDataResolver)
