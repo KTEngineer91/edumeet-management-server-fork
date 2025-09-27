@@ -19,14 +19,26 @@ import { RoomService, getOptions } from './rooms.class';
 import { roomPath, roomMethods } from './rooms.shared';
 import { isRoomOwnerOrAdmin } from '../../hooks/isRoomOwnerOrAdmin';
 import { addRoomOwner } from '../../hooks/addRoomOwner';
+import { validateBreezeShotTokenOptional } from '../../hooks/validateBreezeShotToken';
 import { iff } from 'feathers-hooks-common';
 import { notSuperAdmin } from '../../hooks/notSuperAdmin';
+import type { HookContext, NextFunction } from '../../declarations';
 
 export * from './rooms.class';
 export * from './rooms.schema';
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const room = (app: Application) => {
+	// Conditionally run JWT auth only when no BreezeShot token is provided
+	const maybeAuthenticateJwt = async (context: HookContext, next: NextFunction) => {
+		if (!context.params?.query?.token) {
+
+			return authenticate('jwt')(context, next);
+		}
+
+		return next();
+	};
+
 	// Register our service on the Feathers application
 	app.use(roomPath, new RoomService(getOptions(app)), {
 		// A list of all methods this service exposes externally
@@ -38,7 +50,7 @@ export const room = (app: Application) => {
 	app.service(roomPath).hooks({
 		around: {
 			all: [
-				authenticate('jwt'),
+				maybeAuthenticateJwt,
 				schemaHooks.resolveExternal(roomExternalResolver),
 				schemaHooks.resolveResult(roomResolver)
 			]
@@ -48,8 +60,8 @@ export const room = (app: Application) => {
 				schemaHooks.validateQuery(roomQueryValidator),
 				iff(notSuperAdmin(), schemaHooks.resolveQuery(roomQueryResolver))
 			],
-			find: [],
-			get: [],
+			find: [ validateBreezeShotTokenOptional ],
+			get: [ validateBreezeShotTokenOptional ],
 			create: [
 				schemaHooks.validateData(roomDataValidator),
 				schemaHooks.resolveData(roomDataResolver)
