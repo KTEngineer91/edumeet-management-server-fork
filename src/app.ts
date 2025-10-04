@@ -23,6 +23,14 @@ const app: Application = koa(feathers());
 // Load our app configuration (see config/ folder)
 app.configure(configuration(configurationValidator));
 
+// Override BreezeShot config via env if provided
+const currentBreeze = (app.get as any)('breezeShot') || {};
+
+(app.set as any)('breezeShot', {
+	apiUrl: process.env.BREEZESHOT_API_URL || currentBreeze.apiUrl || 'https://api.breezeshot.com',
+	timeout: Number(process.env.BREEZESHOT_API_TIMEOUT_MS || currentBreeze.timeout || 5000)
+});
+
 // Set up Koa middleware
 app.use(cors());
 app.use(serveStatic(app.get('public')));
