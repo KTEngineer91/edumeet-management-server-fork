@@ -20,7 +20,7 @@ export const topicGroupRoutes = (app: Application) => {
 			
 			try {
 				const axios = await import('axios');
-				const response = await axios.default.post(`${breezeshotApiUrl}/v1/topic-group/validate-token`, {
+				const response = await axios.default.post(`${breezeshotApiUrl}/api/v1/topic-group/validate-token`, {
 					token
 				}, {
 					timeout: 5000,
@@ -57,7 +57,7 @@ export const topicGroupRoutes = (app: Application) => {
 			
 			try {
 				const axios = await import('axios');
-				const response = await axios.default.get(`${breezeshotApiUrl}/v1/topic-group/validate-edumeet-room`, {
+				const response = await axios.default.get(`${breezeshotApiUrl}/api/v1/topic-group/validate-edumeet-room`, {
 					params: { userKey, roomId, topicId },
 					timeout: 5000,
 					headers: { 'Content-Type': 'application/json' }
