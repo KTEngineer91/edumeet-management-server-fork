@@ -12,6 +12,7 @@ import { authentication } from './authentication';
 import { services } from './services/index';
 import { channels } from './channels';
 import { authCallback } from './authCallback';
+import { topicGroupRoutes } from './routes/topicGroup';
 // import { setDebug } from '@feathersjs/commons';
 
 // eslint-disable-next-line no-console
@@ -21,6 +22,14 @@ const app: Application = koa(feathers());
 
 // Load our app configuration (see config/ folder)
 app.configure(configuration(configurationValidator));
+
+// Override BreezeShot config via env if provided
+const currentBreeze = (app.get as any)('breezeShot') || {};
+
+(app.set as any)('breezeShot', {
+	apiUrl: process.env.BREEZESHOT_API_URL || currentBreeze.apiUrl || 'https://api.breezeshot.com',
+	timeout: Number(process.env.BREEZESHOT_API_TIMEOUT_MS || currentBreeze.timeout || 5000)
+});
 
 // Set up Koa middleware
 app.use(cors());
@@ -37,6 +46,7 @@ app.configure(channels);
 app.configure(postgresql);
 app.configure(authentication);
 app.configure(services);
+app.configure(topicGroupRoutes);
 
 // Register hooks that run on all service methods
 app.hooks({ around: { all: [ logError ] } });

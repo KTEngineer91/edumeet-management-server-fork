@@ -9,6 +9,6 @@
 		"outDir": "dist",
 		"esModuleInterop": true,
 	},
-	"include": [ "src", "test", "knexfile.ts" ],
-	"exclude": [ "migrations" ]
+	"include": [ "src", "knexfile.ts" ],
+	"exclude": [ "migrations", "src/__tests__", "test" ]
 }
